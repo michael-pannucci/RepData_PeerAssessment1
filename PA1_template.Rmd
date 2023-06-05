@@ -5,6 +5,9 @@ output:
     keep_md: true
 ---
 
+``` {r noscinot, echo = FALSE}
+options(scipen = 999)
+```
 
 ## Loading and preprocessing the data
 
@@ -53,14 +56,14 @@ mean_steps <- mean(total1$total_steps)
 median_steps <- median(total1$total_steps)
 ```
 
-From these calculations, we can see that the mean total number of steps taken per day is `r mean_steps`, and the median total number of steps taken per day is `r median_steps`.
+From these calculations, we can see that the mean total number of steps taken per day is `r round(mean_steps, 1)`, and the median total number of steps taken per day is `r round(median_steps, 1)`.
 
 Let's look at a histogram of the total number of steps taken each day.
 
-``` {r plot1}
+``` {r plot1, message = FALSE}
 plot1 <- ggplot(total1, aes(x = total_steps)) +
     geom_histogram() +
-    labs(title = "Total Number of Steps per Day") +
+    labs(title = "Figure 1: Total Number of Steps per Day") +
     labs(x = "Total Steps", y = "Frequency") +
     theme_bw(base_family = "Avenir", base_size = 12)
 
@@ -81,14 +84,14 @@ intervals <- main %>%
 
 plot2 <- ggplot(intervals, aes(x = interval, y = average_steps)) +
     geom_line(stat = "identity") +
-    labs(title = "Average Number of Steps Taken per 5-Minute Interval") +
+    labs(title = "Figure 2: Average Number of Steps Taken per 5-Minute Interval") +
     labs(x = "5-Minute Interval", y = "Average Number of Steps") +
     theme_bw(base_family = "Avenir", base_size = 12)
 
 print(plot2)
 ```
 
-From the histogram, we see fairly inactive steps counts from interval 0 through 500, which corresponds to midnight to 5:00 a.m. Then, the average step count increases in the mid-morning before reducing again and becoming fairly cyclic during the afternoons before tapering off after interval 2000, which corresponds to 8:00 p.m.
+From the line plot, we see fairly inactive steps counts from interval 0 through 500, which corresponds to midnight to 5:00 a.m. Then, the average step count increases in the mid-morning before reducing again and becoming fairly cyclic during the afternoons before tapering off after interval 2000, which corresponds to 8:00 p.m.
 
 The 5-minute interval that, on average, contains the maximum number of steps can be calculated in R as follows:
 
@@ -115,14 +118,14 @@ main2 <- inner_join(main, intervals, by = "interval") %>%
 
 Now, let's re-compute the total number of steps per day using this imputed data and plot the histogram again. Let's also re-compute the mean and median total number of steps.
 
-``` {r recompute}
+``` {r recompute, message = FALSE}
 total2 <- main2 %>%
     group_by(date) %>%
     summarize(total_steps2 = sum(steps2))
 
 plot3 <- ggplot(total2, aes(x = total_steps2)) +
     geom_histogram() +
-    labs(title = "Total Number of Steps per Day") +
+    labs(title = "Figure 3: Total Number of Steps per Day") +
     labs(x = "Total Steps", y = "Frequency") +
     theme_bw(base_family = "Avenir", base_size = 12)
 
@@ -132,7 +135,7 @@ mean_steps2 <- mean(total2$total_steps2)
 median_steps2 <- median(total2$total_steps2)
 ```
 
-As we can see, the new histogram does not look appreciably different from the original one, and the new mean and median (`r mean_steps2` and `r median_steps2`, respectively) are also quite similar. In fact, the original mean and the new mean are the same, as expected since we used the mean to impute a missing value.
+As we can see, the new histogram does not look appreciably different from the original one, and the new mean and median (`r round(mean_steps2, 1)` and `r round(median_steps2, 1)`, respectively) are also quite similar. In fact, the original mean and the new mean are the same, as expected since we used the mean to impute a missing value.
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
@@ -148,7 +151,7 @@ main2 <- main2 %>%
 
 Now, let's compute the average number of steps per day, separately for weekdays and weekends.
 
-``` {r weekday_weekend_average}
+``` {r weekday_weekend_average, message = FALSE}
 final <- main2 %>%
     group_by(day, interval) %>%
     summarize(average_steps = mean(steps2))
@@ -160,7 +163,7 @@ Let's create a panel plot of these averages, separately for weekdays and weekend
 plot4 <- ggplot(final, aes(x = interval, y = average_steps)) +
     geom_line(stat = "identity") +
     facet_wrap(day ~ ., nrow = 2) +
-    labs(title = "Average Number of Steps per Interval by Weekday/Weekend") +
+    labs(title = "Figure 4: Average Number of Steps per Interval by Weekday/Weekend") +
     labs(x = "5-Minute Interval", y = "Average Number of Steps") +
     theme_bw(base_family = "Avenir", base_size = 12)
 
