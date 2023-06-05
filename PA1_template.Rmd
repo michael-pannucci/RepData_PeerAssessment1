@@ -8,12 +8,11 @@ output:
 
 ## Loading and preprocessing the data
 
-We begin by setting up a few preliminaries for the environment:
+We begin by setting up a few preliminaries for the environment. We will be making use of the **dplyr** and **ggplot2** libraries in this analysis.
 
-``` {r prelim, results = "hide"}
+``` {r prelim, results = "hide", message = FALSE}
 library(dplyr)
 library(ggplot2)
-setwd("/Users/mpannucc/Documents/R/DS300/Course Project 1")
 ```
 
 Now, let's read in the data:
@@ -54,7 +53,7 @@ mean_steps <- mean(total1$total_steps)
 median_steps <- median(total1$total_steps)
 ```
 
-From these calculations, you can see that the mean total number of steps taken per day is `r mean_steps`, and the median total number of steps taken per day is `r median_steps`.
+From these calculations, we can see that the mean total number of steps taken per day is `r mean_steps`, and the median total number of steps taken per day is `r median_steps`.
 
 Let's look at a histogram of the total number of steps taken each day.
 
@@ -67,6 +66,8 @@ plot1 <- ggplot(total1, aes(x = total_steps)) +
 
 print(plot1)
 ```
+
+From the histogram, we can see an average of around 10,000 steps per day.
 
 ## What is the average daily activity pattern?
 
@@ -95,7 +96,7 @@ The 5-minute interval that, on average, contains the maximum number of steps can
 intervals$interval[which.max(intervals$average_steps)]
 ```
 
-Thus, interval 835, which corresponds to clock time 8:35-8:40 a.m., is where the peak average number of steps occurs. This is consistent with what we see in the time series plot.
+Thus, interval 835, which corresponds to a clock time interval of 8:35-8:40 a.m., is where the peak average number of steps occurs. This is consistent with what we see in the time series plot.
 
 ## Imputing missing values
 
@@ -120,7 +121,10 @@ total2 <- main2 %>%
     summarize(total_steps2 = sum(steps2))
 
 plot3 <- ggplot(total2, aes(x = total_steps2)) +
-    geom_histogram()
+    geom_histogram() +
+    labs(title = "Total Number of Steps per Day") +
+    labs(x = "Total Steps", y = "Frequency") +
+    theme_bw(base_family = "Avenir", base_size = 12)
 
 print(plot3)
 
@@ -163,4 +167,4 @@ plot4 <- ggplot(final, aes(x = interval, y = average_steps)) +
 print(plot4)
 ```
 
-From the panels, we can see generally similar activity trend. The peak at around 8:30 a.m. is not quite as strong on the weekend, but the general trend is still a peak around that time, followed by a dip, following by cyclic patterns in the afternoon before tapering off after 8:00 p.m. If anything, the weekend afternoon cyclic patterns are more pronounced than their weekday counterparts.
+From the panels, we can see generally similar activity trend. The peak at around 8:30 a.m. is not quite as strong on the weekend, but the general trend is still a peak around that time, followed by a dip, followed by cyclic patterns in the afternoon before tapering off after 8:00 p.m. If anything, the weekend afternoon cyclic patterns are more pronounced than their weekday counterparts.
